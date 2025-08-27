@@ -4,6 +4,8 @@ __pycache__/
 .vscode/
 .ipynb_checkpoints/
 mlruns/
+processed/train.csv
+processed/test.csv
 
 
 
