@@ -1,0 +1,4 @@
+{
+  "name": "imdb-sentiment-demo-full",
+  "description": "Demo with DVC + MLflow + FastAPI + trained model (sample data)"
+}
