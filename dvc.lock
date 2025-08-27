@@ -1,0 +1,50 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/prepare_data.py
+    deps:
+    - path: data/IMDB Dataset.csv
+      hash: md5
+      md5: 308443a50e5c993e7b8a1cdb95750026
+      size: 66212309
+    - path: src/prepare_data.py
+      hash: md5
+      md5: 0d2ffe849446b1b57f062c2ed1132d78
+      size: 604
+    outs:
+    - path: data/test.csv
+      hash: md5
+      md5: 6cd23c7b40b4d2c371217dc5ca881224
+      size: 119
+    - path: data/train.csv
+      hash: md5
+      md5: 11ef960ba9125a798495124f183b847e
+      size: 283
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/test.csv
+      hash: md5
+      md5: 6cd23c7b40b4d2c371217dc5ca881224
+      size: 119
+    - path: data/train.csv
+      hash: md5
+      md5: 11ef960ba9125a798495124f183b847e
+      size: 283
+    - path: src/train.py
+      hash: md5
+      md5: 64f3de0adbcdbd213dddc749670c8c1b
+      size: 1268
+    outs:
+    - path: metrics/accuracy.json
+      hash: md5
+      md5: abc5d1703c8f1225fda9c978061e8198
+      size: 20
+    - path: models/model.pkl
+      hash: md5
+      md5: bd62e8bf572f6d203bd3d2bc5c09f992
+      size: 40863
+    - path: models/vectorizer.pkl
+      hash: md5
+      md5: 0a91e2fd61a78f10b9c4a8de3eee677b
+      size: 182533
