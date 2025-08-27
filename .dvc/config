@@ -1,0 +1,5 @@
+[core]
+    remote = gcsremote
+['remote "gcsremote"']
+    url = gs://dharsh_bucket15
+    credentialpath = C:\Users\dharshini.s\Downloads\deft-strata-469915-b4-e070bd4459e9.json
