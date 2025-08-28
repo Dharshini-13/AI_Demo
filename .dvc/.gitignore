@@ -1,18 +1,3 @@
-# Ignore local DVC-only files
-.dvc/config.local
-.dvc/tmp/
-.dvc/cache/
-
-# Ignore actual data and model binaries (DVC will track via .dvc pointer files)
-data/
-models/
-
-# But keep DVC metadata files
-!.dvc/config
-!.dvc/.gitignore
-!*.dvc
-!dvc.yaml
-!dvc.lock
 /config.local
 /tmp
 /cache
