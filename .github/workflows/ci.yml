@@ -1,14 +1,13 @@
-name: IMDB Sentiment Workflow (Demo)
+name: MLOps Pipeline
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  train:
+  mlops:
     runs-on: ubuntu-latest
 
     env:
@@ -19,38 +18,43 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install dvc[all] dagshub mlflow
+          pip install "dvc[all]" dagshub mlflow
 
-      - name: Configure Git & DVC remote
+      - name: Configure Git
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          dvc remote add -d dagshub https://dagshub.com/Dharsh/imdb-response-demo.dvc
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Configure DVC Remote for Dagshub
+        run: |
+          # Force-update remote to avoid 'already exists' error
+          dvc remote add -d -f dagshub https://dagshub.com/Dharsh/imdb-response-demo.dvc
           dvc remote modify dagshub --local auth basic
-          dvc remote modify dagshub --local user Dharsh
-          dvc remote modify dagshub --local password 4f3284cea30d20043975370eef81965d94e13fe1
+          dvc remote modify dagshub --local user $DAGSHUB_USER
+          dvc remote modify dagshub --local password $DAGSHUB_TOKEN
 
-      - name: Pull dataset from Dagshub
-        run: dvc pull -r dagshub
+      - name: Pull data and artifacts from Dagshub
+        run: dvc pull -r dagshub --force
 
-      - name: Run training
-        run: python src/train.py
+      - name: Run DVC pipeline
+        run: dvc repro
 
-      - name: Track artifacts and push to Dagshub
+      - name: Push updated artifacts to Dagshub
+        run: dvc push -r dagshub
+
+      - name: Commit and push changes to GitHub
         run: |
-          dvc add artifacts/model.pkl artifacts/vectorizer.pkl data/processed artifacts/metrics.json
-          git add artifacts/*.dvc data/processed/*.dvc dvc.lock
-          git commit -m "Auto: update model artifacts" || echo "No changes"
-          git push origin main
-          dvc push -r dagshub
+          git add -A
+          git commit -m "Auto-update artifacts and metrics [skip ci]" || echo "No changes to commit"
+          git push origin main || echo "No changes to push"

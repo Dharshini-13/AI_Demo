@@ -13,3 +13,6 @@ models/
 !*.dvc
 !dvc.yaml
 !dvc.lock
+/config.local
+/tmp
+/cache
