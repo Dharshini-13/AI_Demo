@@ -38,9 +38,9 @@ stages:
     outs:
     - path: data/processed/test.csv
       hash: md5
-      md5: 5eefd3b57e91503fa14b21dd6f2be7e8
-      size: 16628055
+      md5: 2a7638c5515e76a8651d02c213539916
+      size: 13137952
     - path: data/processed/train.csv
       hash: md5
-      md5: ddfa470c6f4cf98d2e4e8ad42b7a4496
-      size: 49634273
+      md5: cd79dcc20c4c15556da51647497c8393
+      size: 52774376
