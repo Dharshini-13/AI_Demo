@@ -3,36 +3,48 @@ stages:
   train:
     cmd: python src/train.py
     deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 5eefd3b57e91503fa14b21dd6f2be7e8
+      size: 16628055
+    - path: data/processed/train.csv
+      hash: md5
+      md5: ddfa470c6f4cf98d2e4e8ad42b7a4496
+      size: 49634273
+    - path: src/train.py
+      hash: md5
+      md5: d6f47c45681966dd0f3f881fe9054de3
+      size: 1360
+    outs:
+    - path: artifacts/metrics.json
+      hash: md5
+      md5: a179d2a1a3380d8728c8fe96219c713e
+      size: 32
+    - path: artifacts/model.pkl
+      hash: md5
+      md5: 35cbffe6e1ccf2ed54084ede74d4ca45
+      size: 160839
+    - path: artifacts/vectorizer.pkl
+      hash: md5
+      md5: 9ae1650a261ea5d9aedaea4727921423
+      size: 142144
+  prepare:
+    cmd: python src/prepare_data.py
+    deps:
     - path: data/raw/IMDB_Dataset.csv
       hash: md5
       md5: 308443a50e5c993e7b8a1cdb95750026
       size: 66212309
-    - path: src/params.yaml
+    - path: src/prepare_data.py
       hash: md5
-      md5: a0599adee1441366aa29cde33a1481ba
-      size: 73
-    - path: src/train.py
-      hash: md5
-      md5: e94e1d92aa4e210e878343360b080838
-      size: 2657
+      md5: e9328d3d2933b0e7623539e621cae78a
+      size: 941
     outs:
-    - path: artifacts/metrics.json
-      hash: md5
-      md5: c908aa164fe46b36daeaf838fd9c00f0
-      size: 109
-    - path: artifacts/model.pkl
-      hash: md5
-      md5: 5e26b44fbeb833767a8c265b9f3235d9
-      size: 40863
-    - path: artifacts/vectorizer.pkl
-      hash: md5
-      md5: a7f151e03e267353229d7dd698543ddc
-      size: 182533
     - path: data/processed/test.csv
       hash: md5
-      md5: 1c87d1d67bfe923aed1aa0e54d7a2fb1
-      size: 13223638
+      md5: 5eefd3b57e91503fa14b21dd6f2be7e8
+      size: 16628055
     - path: data/processed/train.csv
       hash: md5
-      md5: 7f2c4d6b84d1f459c240d1cdec2b1446
-      size: 52688690
+      md5: ddfa470c6f4cf98d2e4e8ad42b7a4496
+      size: 49634273
