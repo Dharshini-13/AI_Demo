@@ -3,31 +3,27 @@ stages:
   train:
     cmd: python src/train.py
     deps:
-    - path: data/processed/test.csv
-      hash: md5
-      md5: 5eefd3b57e91503fa14b21dd6f2be7e8
-      size: 16628055
     - path: data/processed/train.csv
       hash: md5
-      md5: ddfa470c6f4cf98d2e4e8ad42b7a4496
-      size: 49634273
+      md5: cd79dcc20c4c15556da51647497c8393
+      size: 52774376
     - path: src/train.py
       hash: md5
-      md5: d6f47c45681966dd0f3f881fe9054de3
-      size: 1360
+      md5: 7eed8a467cefa0b7f541b30c8c933634
+      size: 2287
     outs:
     - path: artifacts/metrics.json
       hash: md5
-      md5: a179d2a1a3380d8728c8fe96219c713e
-      size: 32
+      md5: cc046245ba07d9d7b57a9cdb06d570db
+      size: 97
     - path: artifacts/model.pkl
       hash: md5
-      md5: 35cbffe6e1ccf2ed54084ede74d4ca45
-      size: 160839
+      md5: 0ef4ac81c9e904eeab2451815ed5fc5d
+      size: 40863
     - path: artifacts/vectorizer.pkl
       hash: md5
-      md5: 9ae1650a261ea5d9aedaea4727921423
-      size: 142144
+      md5: ce1679f848816e018af83a3c593d32f8
+      size: 182517
   prepare:
     cmd: python src/prepare_data.py
     deps:

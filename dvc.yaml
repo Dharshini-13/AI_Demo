@@ -2,19 +2,18 @@ stages:
   prepare:
     cmd: python src/prepare_data.py
     deps:
-      - src/prepare_data.py
-      - data/raw/IMDB_Dataset.csv
+    - src/prepare_data.py
+    - data/raw/IMDB_Dataset.csv
     outs:
-      - data/processed/train.csv
-      - data/processed/test.csv
+    - data/processed/train.csv
+    - data/processed/test.csv
 
   train:
     cmd: python src/train.py
     deps:
-      - src/train.py
-      - data/processed/train.csv
-      - data/processed/test.csv
+    - data/processed/train.csv
+    - src/train.py
     outs:
-      - artifacts/model.pkl
-      - artifacts/vectorizer.pkl
-      - artifacts/metrics.json
+    - artifacts/metrics.json
+    - artifacts/model.pkl
+    - artifacts/vectorizer.pkl
