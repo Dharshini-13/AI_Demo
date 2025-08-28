@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/dharshini.s/Downloads/imdb-sentiment-demo/mlruns/999943298708355201/ec6791af767247029f1f719c21e75ed2/artifacts
+end_time: 1756311830055
+entry_point_name: ''
+experiment_id: '999943298708355201'
+lifecycle_stage: active
+run_id: ec6791af767247029f1f719c21e75ed2
+run_name: wise-bug-184
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756311816942
+status: 3
+tags: []
+user_id: dharshini.s

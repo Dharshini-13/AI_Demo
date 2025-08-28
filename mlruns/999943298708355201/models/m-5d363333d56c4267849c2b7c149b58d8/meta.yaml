@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Users/dharshini.s/Downloads/imdb-sentiment-demo/mlruns/999943298708355201/models/m-5d363333d56c4267849c2b7c149b58d8/artifacts
+creation_timestamp: 1756311817944
+experiment_id: '999943298708355201'
+last_updated_timestamp: 1756311830036
+model_id: m-5d363333d56c4267849c2b7c149b58d8
+model_type: null
+name: sklearn-model
+source_run_id: ec6791af767247029f1f719c21e75ed2
+status: 2
+status_message: null

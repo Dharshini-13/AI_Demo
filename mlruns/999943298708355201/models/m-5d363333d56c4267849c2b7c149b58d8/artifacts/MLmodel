@@ -1,0 +1,22 @@
+artifact_path: file:///C:/Users/dharshini.s/Downloads/imdb-sentiment-demo/mlruns/999943298708355201/models/m-5d363333d56c4267849c2b7c149b58d8/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.7
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.1
+mlflow_version: 3.3.2
+model_id: m-5d363333d56c4267849c2b7c149b58d8
+model_size_bytes: 40720
+model_uuid: m-5d363333d56c4267849c2b7c149b58d8
+prompts: null
+run_id: ec6791af767247029f1f719c21e75ed2
+utc_time_created: '2025-08-27 16:23:38.029859'
