@@ -1,25 +1,25 @@
 name: IMDB Sentiment CI
- 
+
 on:
   push:
     branches:
       - main
   pull_request:
- 
+
 jobs:
   build-and-train:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./
- 
+
     steps:
       # ------------------------
       # Checkout repo
       # ------------------------
       - name: Checkout code
         uses: actions/checkout@v3
- 
+
       # ------------------------
       # Setup Python
       # ------------------------
@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
- 
+
       # ------------------------
       # Install dependencies
       # ------------------------
@@ -36,7 +36,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install dvc[s3]  # adjust for your remote type
- 
+
       # ------------------------
       # Configure DVC remote (Dagshub)
       # ------------------------
@@ -45,7 +45,7 @@ jobs:
           dvc remote modify dagshub --local auth basic
           dvc remote modify dagshub --local user Dharsh
           dvc remote modify dagshub --local password 4f3284cea30d20043975370eef81965d94e13fe1
- 
+
       # ------------------------
       # Clean local DVC cache and outputs
       # ------------------------
@@ -54,36 +54,50 @@ jobs:
           rm -rf .dvc/cache
           rm -rf data/processed/*
           rm -rf artifacts/*
-          rm -rf metrics/*
-          rm -f model.pkl
- 
+          rm -rf reports/*
+          rm -rf models/*
+
       # ------------------------
       # Pull all DVC outputs fresh from remote
       # ------------------------
       - name: Pull DVC outputs fresh
         run: |
           dvc pull -r dagshub --force
- 
+
       # ------------------------
       # Reproduce pipeline if anything changed
       # ------------------------
       - name: Reproduce DVC pipeline
         run: dvc repro
- 
+
       # ------------------------
       # Verify files are present
       # ------------------------
       - name: Verify pulled files
         run: |
-          echo "Data processed:"
-          ls -l data/processed/
-          echo "Artifacts:"
-          ls -l artifacts/
-          echo "Metrics:"
-          ls -l metrics/
-          echo "Model:"
-          ls -l model.pkl
- 
+          echo "Data files:"
+          ls -l data/
+          
+          echo "Reports / Metrics:"
+          ls -l reports/
+          
+          echo "Models:"
+          ls -l models/
+          
+          echo "Artifacts folder (if exists):"
+          ls -l artifacts/ || echo "No artifacts folder"
+
+      # ------------------------
+      # Upload artifacts (model + metrics)
+      # ------------------------
+      - name: Upload model and metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: imdb-sentiment-artifacts
+          path: |
+            models/
+            reports/
+
       # ------------------------
       # Test API import
       # ------------------------
