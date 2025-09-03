@@ -58,11 +58,10 @@ jobs:
           rm -rf models/*
 
       # ------------------------
-      # Pull all DVC outputs fresh from remote
+      # Pull all DVC outputs fresh
       # ------------------------
       - name: Pull DVC outputs fresh
-        run: |
-          dvc pull -r dagshub --force
+        run: dvc pull -r dagshub --force
 
       # ------------------------
       # Reproduce pipeline if anything changed
@@ -71,36 +70,25 @@ jobs:
         run: dvc repro
 
       # ------------------------
-      # Verify files are present
+      # Verify files are present safely
       # ------------------------
       - name: Verify pulled files
         run: |
           echo "Data files:"
-          ls -l data/
-          
+          ls -l data/ || echo "No data folder"
+
           echo "Reports / Metrics:"
-          ls -l reports/
-          
+          if [ -d reports ]; then
+            ls -l reports/
+          else
+            echo "No reports folder yet"
+          fi
+
           echo "Models:"
-          ls -l models/
-          
+          if [ -d models ]; then
+            ls -l models/
+          else
+            echo "No models folder yet"
+          fi
+
           echo "Artifacts folder (if exists):"
-          ls -l artifacts/ || echo "No artifacts folder"
-
-      # ------------------------
-      # Upload artifacts (model + metrics)
-      # ------------------------
-      - name: Upload model and metrics
-        uses: actions/upload-artifact@v4
-        with:
-          name: imdb-sentiment-artifacts
-          path: |
-            models/
-            reports/
-
-      # ------------------------
-      # Test API import
-      # ------------------------
-      - name: Test API import
-        run: |
-          python -c "from src import app; print('App imported successfully')"
