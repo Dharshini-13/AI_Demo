@@ -5,11 +5,9 @@ on:
     branches:
       - main
   pull_request:
-  workflow_dispatch:           # manual trigger
-  repository_dispatch:         # external trigger from Dagshub webhook
 
 jobs:
-  build-train-and-push:
+  build-train-push:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -21,8 +19,6 @@ jobs:
       # ------------------------
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0   # required for pushing back changes
 
       # ------------------------
       # Setup Python
@@ -39,7 +35,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install dvc[s3]  # adjust depending on your Dagshub remote type
+          pip install dvc[s3]  # change if using other storage type
 
       # ------------------------
       # Configure DVC remote (Dagshub)
@@ -63,46 +59,49 @@ jobs:
       # ------------------------
       # Pull all DVC outputs fresh
       # ------------------------
-      - name: Pull DVC outputs
+      - name: Pull DVC outputs fresh
         run: dvc pull -r dagshub --force
 
       # ------------------------
-      # Reproduce pipeline (train if needed)
+      # Reproduce pipeline (retrain if needed)
       # ------------------------
       - name: Reproduce DVC pipeline
         run: dvc repro
 
       # ------------------------
-      # Push updated outputs to Dagshub
+      # Push updated DVC outputs to Dagshub
       # ------------------------
-      - name: Push updated outputs to Dagshub
+      - name: Push DVC outputs to Dagshub
         run: dvc push -r dagshub
 
       # ------------------------
-      # Commit & push repo changes (like dvc.lock updates)
+      # Verify files are present safely
       # ------------------------
-      - name: Commit and push changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git diff --cached --quiet || git commit -m "Update pipeline outputs [skip ci]"
-          git push origin HEAD:main
-
-      # ------------------------
-      # Verify pulled files
-      # ------------------------
-      - name: Verify files
+      - name: Verify outputs
         run: |
           echo "Data files:"
-          ls -l data/processed/ || echo "No processed data"
-          echo "Artifacts:"
-          ls -l artifacts/ || echo "No artifacts"
+          if [ -d data/processed ]; then
+            ls -l data/processed/
+          else
+            echo "No processed data folder"
+          fi
+
+          echo "Artifacts (metrics, vectorizer, model):"
+          if [ -d artifacts ]; then
+            ls -l artifacts/
+          else
+            echo "No artifacts folder"
+          fi
+
           echo "Models:"
-          ls -l models/ || echo "No models"
+          if [ -d models ]; then
+            ls -l models/
+          else
+            echo "No models folder"
+          fi
 
       # ------------------------
-      # Upload artifacts (model + metrics)
+      # Upload artifacts to GitHub Actions
       # ------------------------
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
