@@ -54,7 +54,6 @@ jobs:
           rm -rf .dvc/cache
           rm -rf data/processed/*
           rm -rf artifacts/*
-          rm -rf reports/*
           rm -rf models/*
 
       # ------------------------
@@ -75,20 +74,39 @@ jobs:
       - name: Verify pulled files
         run: |
           echo "Data files:"
-          ls -l data/ || echo "No data folder"
-
-          echo "Reports / Metrics:"
-          if [ -d reports ]; then
-            ls -l reports/
+          if [ -d data/processed ]; then
+            ls -l data/processed/
           else
-            echo "No reports folder yet"
+            echo "No processed data folder"
+          fi
+
+          echo "Artifacts (metrics, vectorizer, model):"
+          if [ -d artifacts ]; then
+            ls -l artifacts/
+          else
+            echo "No artifacts folder"
           fi
 
           echo "Models:"
           if [ -d models ]; then
             ls -l models/
           else
-            echo "No models folder yet"
+            echo "No models folder"
           fi
 
-          echo "Artifacts folder (if exists):"
+      # ------------------------
+      # Upload artifacts (model + metrics)
+      # ------------------------
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: imdb-sentiment-artifacts
+          path: |
+            artifacts/
+            models/
+
+      # ------------------------
+      # Test API import
+      # ------------------------
+      - name: Test API import
+        run: python -c "from src import app; print('App imported successfully')"
